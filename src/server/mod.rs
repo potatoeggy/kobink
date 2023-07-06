@@ -6,10 +6,10 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
+use tracing::info;
 
 pub async fn start_server() {
     // initialize tracing
-    tracing_subscriber::fmt::init();
 
     // build our application with a route
     let app = Router::new()
@@ -21,7 +21,7 @@ pub async fn start_server() {
     // run our app with hyper
     // `axum::Server` is a re-export of `hyper::Server`
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    tracing::debug!("listening on {}", addr);
+    info!("listening on {}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
