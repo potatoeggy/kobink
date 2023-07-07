@@ -8,6 +8,9 @@ use hyper::body::HttpBody;
 use hyper::Body;
 use tracing::info;
 
+const IGNORED_EXTENSIONS: [&str; 5] = [".js", ".html", ".css", ".png", ".jpeg"];
+const IGNORED_PATHS: [&str; 1] = ["/example/path"];
+
 pub async fn log_request_response(
     req: Request<Body>,
     next: Next<Body>,
@@ -16,18 +19,14 @@ pub async fn log_request_response(
 
     let path = &req.uri().path().to_string();
 
-    // Don't log these extensions
-    let extension_skip = vec![".js", ".html", ".css", ".png", ".jpeg"];
-    for ext in extension_skip {
+    for ext in IGNORED_EXTENSIONS {
         if path.ends_with(ext) {
             do_log = false;
             break;
         }
     }
 
-    // Want to skip logging these paths
-    let skip_paths = vec!["/example/path"];
-    for skip_path in skip_paths {
+    for skip_path in IGNORED_PATHS {
         if path.ends_with(skip_path) {
             do_log = false;
             break;
