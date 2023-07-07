@@ -1,25 +1,22 @@
 use axum::{
     http::StatusCode,
-    response::IntoResponse,
+    middleware,
     routing::{get, post},
     Json, Router,
 };
+mod logging;
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use tracing::info;
 
 pub async fn start_server() {
-    // initialize tracing
-
-    // build our application with a route
     let app = Router::new()
         // `GET /` goes to `root`
         .route("/", get(root))
         // `POST /users` goes to `create_user`
-        .route("/users", post(create_user));
+        .route("/users", post(create_user))
+        .layer(middleware::from_fn(logging::log_request_response));
 
-    // run our app with hyper
-    // `axum::Server` is a re-export of `hyper::Server`
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     info!("listening on {}", addr);
     axum::Server::bind(&addr)
