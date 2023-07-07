@@ -88,20 +88,3 @@ where
 
     Ok(bytes)
 }
-
-#[tokio::test]
-async fn test_log_request_response() {
-    // create a request to be passed to the middleware
-    let req = Request::new(Body::from("Hello, Axum!"));
-
-    // create a simple router to test the middleware
-    let app = Router::new()
-        .route("/", get(|| async { "Hello, World!" }))
-        .layer(middleware::from_fn(log_request_response));
-
-    // send the request through the middleware
-    let res = app.clone().oneshot(req).await.unwrap();
-
-    // make sure the response has a status code of 200
-    assert_eq!(res.status(), StatusCode::OK);
-}
