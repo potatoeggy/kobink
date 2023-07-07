@@ -1,11 +1,12 @@
 use std::fmt::Display;
 
-use axum::body::Bytes;
-use axum::http::{Request, Response, StatusCode};
-use axum::middleware::Next;
-use axum::response::IntoResponse;
-use hyper::body::HttpBody;
-use hyper::Body;
+use axum::{
+    body::Bytes,
+    http::{Request, Response, StatusCode},
+    middleware::Next,
+    response::IntoResponse,
+};
+use hyper::{body::HttpBody, Body};
 use tracing::info;
 
 const IGNORED_EXTENSIONS: [&str; 5] = [".js", ".html", ".css", ".png", ".jpeg"];
