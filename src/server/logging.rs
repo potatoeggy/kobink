@@ -15,23 +15,16 @@ pub async fn log_request_response(
     req: Request<Body>,
     next: Next<Body>,
 ) -> Result<impl IntoResponse, (StatusCode, String)> {
-    let mut do_log = true;
-
     let path = &req.uri().path().to_string();
 
-    for ext in IGNORED_EXTENSIONS {
-        if path.ends_with(ext) {
-            do_log = false;
-            break;
-        }
-    }
-
-    for skip_path in IGNORED_PATHS {
-        if path.ends_with(skip_path) {
-            do_log = false;
-            break;
-        }
-    }
+    let do_log = IGNORED_EXTENSIONS
+        .iter()
+        .find(|&ext| path.ends_with(ext))
+        .is_none()
+        && IGNORED_PATHS
+            .iter()
+            .find(|&path| path.ends_with(path))
+            .is_none();
 
     let (req_parts, req_body) = req.into_parts();
 
