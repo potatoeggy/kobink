@@ -18,13 +18,14 @@ pub async fn log_request_response(
 ) -> Result<impl IntoResponse, (StatusCode, String)> {
     let path = &req.uri().path().to_string();
 
+    // log iff path does not end with ignored extensions
     let do_log = IGNORED_EXTENSIONS
         .iter()
         .find(|&ext| path.ends_with(ext))
         .is_none()
         && IGNORED_PATHS
             .iter()
-            .find(|&path| path.ends_with(path))
+            .find(|&ext| path.ends_with(ext))
             .is_none();
 
     let (req_parts, req_body) = req.into_parts();
