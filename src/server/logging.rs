@@ -1,20 +1,21 @@
 use std::fmt::Display;
 
 use axum::{
-    body::Bytes,
-    http::{Request, Response, StatusCode},
+    body::{Body, Bytes, HttpBody},
+    extract::Request,
+    http::StatusCode,
     middleware::Next,
-    response::IntoResponse,
+    response::{IntoResponse, Response},
 };
-use hyper::{body::HttpBody, Body};
+use http_body_util::BodyExt;
 use tracing::info;
 
 const IGNORED_EXTENSIONS: [&str; 5] = [".js", ".html", ".css", ".png", ".jpeg"];
 const IGNORED_PATHS: [&str; 1] = ["/example/path"];
 
 pub async fn log_request_response(
-    req: Request<Body>,
-    next: Next<Body>,
+    req: Request,
+    next: Next,
 ) -> Result<impl IntoResponse, (StatusCode, String)> {
     let path = &req.uri().path().to_string();
 
@@ -32,7 +33,7 @@ pub async fn log_request_response(
 
     // Print request
     let bytes = buffer_and_print(req_parts.method.as_str(), path, req_body, do_log).await?;
-    let req = Request::from_parts(req_parts, hyper::Body::from(bytes));
+    let req = Request::from_parts(req_parts, Body::from(bytes));
 
     let res = next.run(req).await;
 
@@ -58,8 +59,8 @@ where
     B: HttpBody<Data = Bytes>,
     B::Error: Display,
 {
-    let bytes = match hyper::body::to_bytes(body).await {
-        Ok(bytes) => bytes,
+    let bytes = match BodyExt::collect(body).await {
+        Ok(bytes) => bytes.to_bytes(),
         Err(err) => {
             return Err((
                 StatusCode::BAD_REQUEST,

@@ -18,11 +18,11 @@ pub async fn start_server() {
         .layer(middleware::from_fn(logging::log_request_response));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    info!("listening on {}", addr);
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
+    let listener = tokio::net::TcpListener::bind(addr.to_string())
         .await
         .unwrap();
+    info!("listening on {}", addr);
+    axum::serve(listener, app).await.unwrap();
 }
 
 // basic handler that responds with a static string
