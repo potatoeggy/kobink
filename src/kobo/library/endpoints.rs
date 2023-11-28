@@ -1,13 +1,12 @@
-use anyhow::Result;
 use axum::{
     http::{HeaderMap, StatusCode},
     routing::{delete, get, post, put},
     Json, Router,
 };
 
-use crate::kobo::models::SyncTokenModel;
+use crate::{kobo::models::SyncTokenModel, server::AppError};
 
-use super::models::SyncResponse;
+use super::models::{Entitlement, SyncEvent, SyncResponse};
 
 pub fn create_library_router() -> Router {
     Router::new()
@@ -21,9 +20,12 @@ async fn stub() -> StatusCode {
     StatusCode::OK
 }
 
-async fn handle_sync(headers: HeaderMap) -> (StatusCode, Json<SyncResponse>) {
+async fn handle_sync(headers: HeaderMap) -> Result<(StatusCode, Json<SyncResponse>), AppError> {
     let sync_token = SyncTokenModel::from_headers(&headers)?;
-    (StatusCode::OK, Json(SyncResponse::new(sync_token)))
+    let res = vec![
+        SyncEvent::
+    ];
+    Ok((StatusCode::OK, Json(res)))
 }
 
 /*

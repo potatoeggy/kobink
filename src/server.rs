@@ -5,6 +5,8 @@ use axum::{
     Json, Router,
 };
 
+mod errors;
+pub use errors::AppError;
 mod logging;
 use crate::kobo::{self, create_kobo_router};
 use serde::{Deserialize, Serialize};

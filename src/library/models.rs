@@ -3,6 +3,8 @@ use std::path::{Path, PathBuf};
 use uuid::Uuid;
 use walkdir::WalkDir;
 
+const DOWNLOAD_URL_FORMAT: &'static str = "http://192.168.2.65:3000/download/{book_id}/epub";
+
 #[derive(Debug)]
 pub struct Book {
     pub id: Uuid,
@@ -10,6 +12,12 @@ pub struct Book {
     pub authors: Vec<String>, // are multiple authors allowed?
     pub description: String,
     pub path: PathBuf,
+}
+
+impl Book {
+    pub fn download_url(&self) -> String {
+        DOWNLOAD_URL_FORMAT.replace("{book_id}", &self.id.to_string())
+    }
 }
 
 pub struct LibraryState {
@@ -26,6 +34,10 @@ impl LibraryState {
 
         library.load_books();
         library
+    }
+
+    pub fn find_book_by_id(&self, id: &str) -> Option<&Book> {
+        self.books.iter().find(|book| book.id.to_string() == id)
     }
 
     // TODO: watch the library path for changes
