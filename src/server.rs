@@ -20,7 +20,9 @@ use std::{
 use tracing::info;
 
 pub async fn start_server() {
-    let initial_state = LibraryState::new("/media/kobink_test");
+    let library_path =
+        std::env::var("LIBRARY_PATH").unwrap_or_else(|_| "/media/kobink_test".to_string());
+    let initial_state = LibraryState::new(&library_path);
     let arcref = Arc::new(Mutex::new(initial_state));
     let app = Router::<Arc<Mutex<LibraryState>>>::new()
         // `GET /` goes to `root`
