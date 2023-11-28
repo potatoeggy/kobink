@@ -1,56 +1,71 @@
-{
-    "BookEntitlement": {
-        "Accessibility": "Full",
-        "ActivePeriod": {
-            "From": "timestamp, datetime.now"
-        },
-        "Created": "timestamp, book creation date",
-        "CrossRevisionId": "book uuid",
-        "Id": "book uuid",
-        "IsRemoved": "bool",
-        "IsHiddenFromArchive": false,
-        "IsLocked": false,
-        "LastModified": "timestamp, book last modified date",
-        "OriginCategory": "Imported",
-        "RevisionId": "book uuid",
-        "Status": "Active"
-    },
-    "BookMetadata": {
-        "Categories": ["00000000-0000-0000-000000000001"],
-        "Contributors": [{"Name": "author name"}],
-        "ContributorRoles": [{"Name": "author name"}],
-        "CoverImageId": "book uuid",
-        "CrossRevisionId":"book uuid",
-        "CurrentDisplayPrice": {"CurrencyCode": "USD", "TotalAmount": 0},
-        "CurrentLoveDisplayPrice": {"TotalAmount": 0},
-        "Description": "description",
-        "DownloadUrls": [
-            {
-                "Format": "EPUB",
-                "Size": "book file size in bytes",
-                "Url": "book download url",
-                "Platform": "Generic"
+[
+    {
+        "NewEntitlement": {
+            "BookEntitlement": {
+                "Accessibility": "Full",
+                "ActivePeriod": {
+                    "From": "1701152749"
+                },
+                "Created": "1701152749",
+                "CrossRevisionId": "77726974-696e-6720-796f-7572206e616d",
+                "Id": "77726974-696e-6720-796f-7572206e616d",
+                "IsRemoved": false,
+                "IsHiddenFromArchive": false,
+                "IsLocked": false,
+                "LastModified": "1701152749",
+                "OriginCategory": "Imported",
+                "RevisionId": "77726974-696e-6720-796f-7572206e616d",
+                "Status": "Active"
+            },
+            "BookMetadata": {
+                "Categories": [
+                    "00000000-0000-0000-000000000001"
+                ],
+                "Contributors": [
+                    "alcyonenight"
+                ],
+                "ContributorRoles": [
+                    {
+                        "Name": "alcyonenight"
+                    }
+                ],
+                "CoverImageId": "77726974-696e-6720-796f-7572206e616d",
+                "CrossRevisionId": "77726974-696e-6720-796f-7572206e616d",
+                "CurrentDisplayPrice": {
+                    "CurrencyCode": "USD",
+                    "TotalAmount": 0
+                },
+                "CurrentLoveDisplayPrice": {
+                    "TotalAmount": 0
+                },
+                "Description": "After Gandharva Ville is attacked, Collei must spend a few weeks living in Alhaitham's house in Sumeru City. It's not what she's used to, but sometimes that's what someone needs to grow. (Or: sometimes Collei's life sucks in ways that every teenager's life sucks, which is a new and confusing experience.)",
+                "DownloadUrls": [
+                    {
+                        "Format": "EPUB",
+                        "Size": 73790,
+                        "Url": "http://192.168.2.65:3000/download/77726974-696e-6720-796f-7572206e616d/EPUB/writing your name - alcyonenight.epub",
+                        "Platform": "Generic"
+                    }
+                ],
+                "EntitlementId": "77726974-696e-6720-796f-7572206e616d",
+                "ExternalIds": [],
+                "Genre": "00000000-0000-0000-000000000001",
+                "IsEligibleForKoboLove": false,
+                "IsInternetArchive": false,
+                "IsPreOrder": false,
+                "IsSocialEnabled": true,
+                "Language": "en",
+                "PhoneticPronunciations": {},
+                "PublicationDate": "1701152749",
+                "Publisher": {
+                    "Imprint": "",
+                    "Name": ""
+                },
+                "RevisionId": "77726974-696e-6720-796f-7572206e616d",
+                "Series": null,
+                "Title": "writing your name",
+                "WorkId": "77726974-696e-6720-796f-7572206e616d"
             }
-        ],
-        "EntitlementId": "book uuid",
-        "ExternalIds": [],
-        "Genre": "00000000-0000-0000-000000000001",
-        "IsEligibleForKoboLove": false,
-        "IsInternetArchive": false,
-        "IsPreOrder": false,
-        "IsSocialEnabled": true,
-        "Language": "en",
-        "Phonetic-Pronunciations": {},
-        "PublicationDate": "timestamp, book publication date",
-        "Publisher": {"Imprint": "", "Name": "publisher name"},
-        "RevisionId":"book uuid",
-        "Series": {
-            "Name": "series name",
-            "Number": 1,
-            "NumberFloat": 1.0,
-            "Id": "series uuid"
-        }, // optional, can be omitted
-        "Title": "book title",
-        "WorkId": "book uuid"
+        }
     }
-}
+]

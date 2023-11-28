@@ -15,7 +15,7 @@ const DEFAULT_HOST: &'static str = "192.168.2.65:3000";
 pub struct Book {
     pub id: Uuid,
     pub title: String,
-    pub authors: Vec<String>, // are multiple authors allowed?
+    pub authors: Vec<String>,
     pub description: String,
     pub path: PathBuf,
     pub size: u64,
@@ -32,7 +32,13 @@ impl Book {
                 DEFAULT_HOST,
                 book_id = self.id,
                 book_format = "EPUB",
-                filename = self.path.file_name().unwrap().to_str().unwrap()
+                filename = self
+                    .path
+                    .file_name()
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .replace(" ", "_")
             ),
             Platform: "Generic".to_string(),
         }

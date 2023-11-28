@@ -41,7 +41,7 @@ pub struct ActivePeriod {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BookMetadata {
     pub Categories: Vec<String>,
-    pub Contributors: Vec<Contributor>,
+    pub Contributors: Vec<String>,
     pub ContributorRoles: Vec<ContributorRole>,
     pub CoverImageId: Uuid,
     pub CrossRevisionId: Uuid,
@@ -64,11 +64,6 @@ pub struct BookMetadata {
     pub Series: Option<Series>,
     pub Title: String,
     pub WorkId: Uuid,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Contributor {
-    pub Name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -135,7 +130,7 @@ pub struct Series {
     },
     "BookMetadata": {
         "Categories": ["00000000-0000-0000-000000000001"],
-        "Contributors": [{"Name": "author name"}],
+        "Contributors": ["name"],
         "ContributorRoles": [{"Name": "author name"}],
         "CoverImageId": "book uuid",
         "CrossRevisionId":"book uuid",

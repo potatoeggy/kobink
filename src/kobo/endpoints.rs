@@ -23,9 +23,11 @@ pub fn create_kobo_router() -> Router<Arc<Mutex<LibraryState>>> {
         .route("/user/profile", get(stub))
         .route("/user/loyalty/benefits", get(stub))
         .route("/deals", get(stub))
+        .route("/products/*_", get(stub))
         .route("/analytics/gettests", post(stub))
         .route("/affiliate", get(stub))
         .route("/initialization", get(handle_initialization))
+        .route("/user/wishlist", get(stub))
         .nest("/library", create_library_router())
 }
 

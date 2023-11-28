@@ -29,6 +29,7 @@ pub async fn log_request_response(
             .find(|&ext| path.ends_with(ext))
             .is_none();
 
+    println!("{:?}", req.headers());
     let (req_parts, req_body) = req.into_parts();
 
     // Print request

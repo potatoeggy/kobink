@@ -1,9 +1,10 @@
 use crate::library::models::Book;
 
 use super::models::{
-    ActivePeriod, BookEntitlement, BookMetadata, Contributor, CurrentDisplayPrice,
+    ActivePeriod, BookEntitlement, BookMetadata, ContributorRole, CurrentDisplayPrice,
     CurrentLoveDisplayPrice, Entitlement, PhoneticPronunciations, Publisher, SyncEvent,
 };
+use chrono::SecondsFormat;
 use uuid::Uuid;
 
 impl SyncEvent {
@@ -20,10 +21,11 @@ impl Entitlement {
         new.BookMetadata.Title = book.title.clone();
         new.BookMetadata.Description = book.description.clone();
         new.BookMetadata.DownloadUrls = vec![book.download_url()];
-        new.BookMetadata.Contributors = book
+        new.BookMetadata.Contributors = book.authors.iter().map(|author| author.clone()).collect();
+        new.BookMetadata.ContributorRoles = book
             .authors
             .iter()
-            .map(|author| Contributor {
+            .map(|author| ContributorRole {
                 Name: author.clone(),
             })
             .collect();
@@ -31,7 +33,7 @@ impl Entitlement {
     }
 
     pub fn default(uuid: Uuid) -> Entitlement {
-        let now = chrono::Utc::now().timestamp().to_string();
+        let now = chrono::Utc::now().to_rfc3339();
         Self {
             BookEntitlement: BookEntitlement {
                 Accessibility: "Full".to_string(),
