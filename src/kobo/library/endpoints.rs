@@ -4,7 +4,7 @@ use axum::{
     Json, Router,
 };
 
-use crate::{kobo::models::SyncTokenModel, server::AppError};
+use crate::{kobo::models::SyncTokenModel, library::LIBRARY, server::AppError};
 
 use super::models::{Entitlement, SyncEvent, SyncResponse};
 
@@ -22,9 +22,9 @@ async fn stub() -> StatusCode {
 
 async fn handle_sync(headers: HeaderMap) -> Result<(StatusCode, Json<SyncResponse>), AppError> {
     let sync_token = SyncTokenModel::from_headers(&headers)?;
-    let res = vec![
-        SyncEvent::
-    ];
+
+    let library = LIBRARY.lock().unwrap();
+    let res = library.books.iter().map(SyncEvent::new).collect();
     Ok((StatusCode::OK, Json(res)))
 }
 

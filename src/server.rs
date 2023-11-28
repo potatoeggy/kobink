@@ -8,7 +8,10 @@ use axum::{
 mod errors;
 pub use errors::AppError;
 mod logging;
-use crate::kobo::{self, create_kobo_router};
+use crate::{
+    kobo::{self, create_kobo_router},
+    library::create_download_router,
+};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use tracing::info;
@@ -20,6 +23,7 @@ pub async fn start_server() {
         // `POST /users` goes to `create_user`
         .route("/users", post(create_user))
         .nest("/kobo/:key/v1", create_kobo_router())
+        .nest("/download", create_download_router())
         .layer(middleware::from_fn(logging::log_request_response));
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));

@@ -3,23 +3,32 @@ use std::path::{Path, PathBuf};
 use uuid::Uuid;
 use walkdir::WalkDir;
 
+use crate::kobo::library::models::DownloadUrl;
+
 const DOWNLOAD_URL_FORMAT: &'static str = "http://192.168.2.65:3000/download/{book_id}/epub";
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Book {
     pub id: Uuid,
     pub title: String,
     pub authors: Vec<String>, // are multiple authors allowed?
     pub description: String,
     pub path: PathBuf,
+    pub size: u64,
 }
 
 impl Book {
-    pub fn download_url(&self) -> String {
-        DOWNLOAD_URL_FORMAT.replace("{book_id}", &self.id.to_string())
+    pub fn download_url(&self) -> DownloadUrl {
+        DownloadUrl {
+            Format: "EPUB".to_string(),
+            Size: self.size,
+            Url: DOWNLOAD_URL_FORMAT.replace("{book_id}", &self.id.to_string()),
+            Platform: "Generic".to_string(),
+        }
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct LibraryState {
     pub path: String,
     pub books: Vec<Book>,
@@ -66,6 +75,7 @@ impl LibraryState {
                 authors: vec![author],
                 description,
                 path: path.path().to_path_buf(),
+                size: epub.root_file.metadata().unwrap().len(),
             });
         }
         println!("loaded {:?} books", self.books);
