@@ -1,41 +1,39 @@
-use http_body_util::{combinators::BoxBody, StreamBody};
-use tokio;
-use tokio_util::io::ReaderStream;
+use std::sync::{Arc, Mutex};
 
 use axum::{
-    body::Body,
-    extract::{Path, Request},
-    http::{request, HeaderMap, StatusCode, Uri},
+    debug_handler,
+    extract::{Path, Request, State},
+    http::{header, HeaderValue, StatusCode},
     response::{IntoResponse, Response},
     routing::get,
     Router,
 };
 use tower::ServiceExt;
-use tower_http::services::{ServeDir, ServeFile};
+use tower_http::services::ServeFile;
 
-use crate::server::AppError;
+use super::{models::LibraryState, LIBRARY_PATH};
 
-use super::{LIBRARY, LIBRARY_PATH};
-
-pub fn create_download_router() -> Router {
-    Router::new().route("/:book_id/:book_format", get(handle_file_download))
+pub fn create_download_router() -> Router<Arc<Mutex<LibraryState>>> {
+    Router::new().route(
+        "/:book_id/:book_format/:filename",
+        get(handle_file_download),
+    )
 }
 
+#[debug_handler]
 async fn handle_file_download(
-    Path(book_id): Path<String>,
-    Path(book_format): Path<String>,
+    Path((book_id, book_format)): Path<(String, String)>,
+    State(library): State<Arc<Mutex<LibraryState>>>,
     request: Request,
-) -> Result<Response, AppError> {
-    let library = LIBRARY.lock().unwrap();
+) -> Response {
+    let book = {
+        let library = library.lock().unwrap();
+        let book = library.find_book_by_id(&book_id).unwrap();
+        book.clone()
+    };
 
-    // unsafe, figure out how to do this properly
-    let book = library.find_book_by_id(&book_id).unwrap();
-    let book = book.clone();
-    // unlock mutex
-    drop(library);
-
-    Ok(ServeFile::new(&book.path)
+    ServeFile::new(&book.path)
         .oneshot(request)
         .await
-        .into_response())
+        .into_response()
 }

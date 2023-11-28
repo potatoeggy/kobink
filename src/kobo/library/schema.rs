@@ -23,7 +23,9 @@ impl Entitlement {
         new.BookMetadata.Contributors = book
             .authors
             .iter()
-            .map(|&author| Contributor { Name: author })
+            .map(|author| Contributor {
+                Name: author.clone(),
+            })
             .collect();
         new
     }
@@ -33,14 +35,14 @@ impl Entitlement {
         Self {
             BookEntitlement: BookEntitlement {
                 Accessibility: "Full".to_string(),
-                ActivePeriod: ActivePeriod { From: now },
-                Created: now,
+                ActivePeriod: ActivePeriod { From: now.clone() },
+                Created: now.clone(),
                 CrossRevisionId: uuid,
                 Id: uuid,
                 IsRemoved: false,
                 IsHiddenFromArchive: false,
                 IsLocked: false,
-                LastModified: now,
+                LastModified: now.clone(),
                 OriginCategory: "Imported".to_string(),
                 RevisionId: uuid,
                 Status: "Active".to_string(),
@@ -67,7 +69,7 @@ impl Entitlement {
                 IsSocialEnabled: true,
                 Language: "en".to_string(),
                 PhoneticPronunciations: PhoneticPronunciations {},
-                PublicationDate: now,
+                PublicationDate: now.clone(),
                 Publisher: Publisher {
                     Imprint: "".to_string(),
                     Name: "".to_string(),

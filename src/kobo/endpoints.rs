@@ -1,3 +1,7 @@
+use std::sync::{Arc, Mutex};
+
+use crate::library::models::LibraryState;
+
 use super::{
     library::create_library_router,
     models::{AuthDeviceRequest, AuthDeviceResponse},
@@ -13,7 +17,7 @@ use axum::{
 const SYNCTOKEN_HEADER: &'static str = "x-kobo-synctoken";
 const INITIALIZATION_DATA: &'static str = include_str!("./data/initialization.json");
 
-pub fn create_kobo_router() -> Router {
+pub fn create_kobo_router() -> Router<Arc<Mutex<LibraryState>>> {
     Router::new()
         .route("/auth/device", post(handle_auth_device))
         .route("/user/profile", get(stub))

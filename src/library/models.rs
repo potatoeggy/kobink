@@ -1,11 +1,15 @@
 use epub::doc::EpubDoc;
-use std::path::{Path, PathBuf};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 use uuid::Uuid;
 use walkdir::WalkDir;
 
 use crate::kobo::library::models::DownloadUrl;
 
-const DOWNLOAD_URL_FORMAT: &'static str = "http://192.168.2.65:3000/download/{book_id}/epub";
+const DEFAULT_PROTOCOL: &'static str = "http";
+const DEFAULT_HOST: &'static str = "192.168.2.65:3000";
 
 #[derive(Debug, Clone)]
 pub struct Book {
@@ -22,7 +26,14 @@ impl Book {
         DownloadUrl {
             Format: "EPUB".to_string(),
             Size: self.size,
-            Url: DOWNLOAD_URL_FORMAT.replace("{book_id}", &self.id.to_string()),
+            Url: format!(
+                "{}://{}/download/{book_id}/{book_format}/{filename}",
+                DEFAULT_PROTOCOL,
+                DEFAULT_HOST,
+                book_id = self.id,
+                book_format = "EPUB",
+                filename = self.path.file_name().unwrap().to_str().unwrap()
+            ),
             Platform: "Generic".to_string(),
         }
     }
@@ -50,7 +61,7 @@ impl LibraryState {
     }
 
     // TODO: watch the library path for changes
-    pub fn load_books(&mut self) {
+    pub fn load_books<'a>(&mut self) {
         // recursively walk the library path and load all the books
         for path in WalkDir::new(&self.path)
             .into_iter()
@@ -69,13 +80,20 @@ impl LibraryState {
                 .mdata("creator")
                 .unwrap_or("Unknown author".to_string());
             let description = epub.mdata("description").unwrap_or("".to_string());
+
+            let mut seed = [0u8; 16];
+            let seed_key = format!("{}{}", title, author);
+            let seed_source = seed_key.as_bytes();
+            let copy_len = std::cmp::min(seed.len(), seed_source.len());
+            seed[..copy_len].copy_from_slice(&seed_source[..copy_len]);
+
             self.books.push(Book {
-                id: Uuid::new_v4(),
+                id: Uuid::from_bytes(seed),
                 title,
                 authors: vec![author],
                 description,
                 path: path.path().to_path_buf(),
-                size: epub.root_file.metadata().unwrap().len(),
+                size: path.metadata().unwrap().len(),
             });
         }
         println!("loaded {:?} books", self.books);
