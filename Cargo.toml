@@ -21,3 +21,7 @@ reqwest = "0.11.22"
 chrono = { version = "0.4", features=["serde", "std"]}
 anyhow = "1.0.75"
 base64 = "0.21.5"
+lazy_static = "1.4.0"
+uuid = {version = "1.6.1", features = ["v4", "macro-diagnostics", "fast-rng"]}
+walkdir = "2.4.0"
+epub = "2.1.1"

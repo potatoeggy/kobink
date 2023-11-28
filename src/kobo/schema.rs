@@ -1,17 +1,15 @@
-use std::error::Error;
-
-use super::models::{self, AuthDeviceResponse, SyncTokenModel, _SyncTokenData};
+use super::models::{AuthDeviceResponse, SyncTokenModel, _SyncTokenData};
 use anyhow::{anyhow, Context};
+use axum;
 use chrono::{self, DateTime, Utc};
 
 const CURRENT_SYNCTOKEN_VERSION: &'static str = "1-1-0";
 const MIN_SYNCTOKEN_VERSION: &'static str = "1-0-0";
-const SYNCTOKEN_HEADER: &'static str = "x-kobo-synctoken";
 
 impl AuthDeviceResponse {
     pub fn from_user_key(user_key: impl ToString) -> AuthDeviceResponse {
         AuthDeviceResponse {
-            AccessToken: "SAMPLE_ACCESS_TOKEN".to_string(),
+            AccessToken: "".to_string(),
             RefreshToken: "SAMPLE_REFRESH_TOKEN".to_string(),
             TokenType: "Bearer".to_string(),
             TrackingId: "SAMPLE_TRACKING_ID".to_string(),
@@ -47,7 +45,7 @@ impl SyncTokenModel {
         Self::new("", None, None, None, None, None)
     }
 
-    pub fn from_headers(headers: &reqwest::header::HeaderMap) -> anyhow::Result<SyncTokenModel> {
+    pub fn from_headers(headers: &axum::http::HeaderMap) -> anyhow::Result<SyncTokenModel> {
         let header_token = headers
             .get("x-kobo-synctoken")
             .context("sync token header not found")?;
@@ -57,7 +55,6 @@ impl SyncTokenModel {
         }
 
         // from https://github.com/janeczku/calibre-web/blob/master/cps/services/SyncToken.py
-        // line 104
 
         if header_token_str.contains(".") {
             // this is the kobo store token, we don't care about it
@@ -66,5 +63,11 @@ impl SyncTokenModel {
         }
 
         Ok(Self::default())
+    }
+}
+
+impl ToString for SyncTokenModel {
+    fn to_string(&self) -> String {
+        base64::encode(serde_json::to_string(&self).unwrap_or("".to_string()))
     }
 }
