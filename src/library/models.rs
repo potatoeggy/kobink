@@ -8,8 +8,8 @@ use walkdir::WalkDir;
 
 use crate::kobo::library::models::DownloadUrl;
 
-const DEFAULT_PROTOCOL: &'static str = "http";
-const DEFAULT_HOST: &'static str = "192.168.2.65:3000";
+const DEFAULT_PROTOCOL: &'static str = "https";
+const DEFAULT_HOST: &'static str = "tickets.eggworld.me";
 
 #[derive(Debug, Clone)]
 pub struct Book {
