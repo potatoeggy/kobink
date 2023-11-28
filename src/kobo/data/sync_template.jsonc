@@ -1,0 +1,56 @@
+{
+    "BookEntitlement": {
+        "Accessibility": "Full",
+        "ActivePeriod": {
+            "From": "timestamp, datetime.now"
+        },
+        "Created": "timestamp, book creation date",
+        "CrossRevisionId": "book uuid",
+        "Id": "book uuid",
+        "IsRemoved": "bool",
+        "IsHiddenFromArchive": false,
+        "IsLocked": false,
+        "LastModified": "timestamp, book last modified date",
+        "OriginCategory": "Imported",
+        "RevisionId": "book uuid",
+        "Status": "Active"
+    },
+    "BookMetadata": {
+        "Categories": ["00000000-0000-0000-000000000001"],
+        "Contributors": [{"Name": "author name"}],
+        "ContributorRoles": [{"Name": "author name"}],
+        "CoverImageId": "book uuid",
+        "CrossRevisionId":"book uuid",
+        "CurrentDisplayPrice": {"CurrencyCode": "USD", "TotalAmount": 0},
+        "CurrentLoveDisplayPrice": {"TotalAmount": 0},
+        "Description": "description",
+        "DownloadUrls": [
+            {
+                "Format": "EPUB",
+                "Size": "book file size in bytes",
+                "Url": "book download url",
+                "Platform": "Generic"
+            }
+        ],
+        "EntitlementId": "book uuid",
+        "ExternalIds": [],
+        "Genre": "00000000-0000-0000-000000000001",
+        "IsEligibleForKoboLove": false,
+        "IsInternetArchive": false,
+        "IsPreOrder": false,
+        "IsSocialEnabled": true,
+        "Language": "en",
+        "Phonetic-Pronunciations": {},
+        "PublicationDate": "timestamp, book publication date",
+        "Publisher": {"Imprint": "", "Name": "publisher name"},
+        "RevisionId":"book uuid",
+        "Series": {
+            "Name": "series name",
+            "Number": 1,
+            "NumberFloat": 1.0,
+            "Id": "series uuid"
+        }, // optional, can be omitted
+        "Title": "book title",
+        "WorkId": "book uuid"
+    }
+}
