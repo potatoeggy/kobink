@@ -4,20 +4,23 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
+
 mod logging;
+use crate::kobo::{self, create_kobo_router};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 use tracing::info;
 
 pub async fn start_server() {
-    let app = Router::new()
+    let mut app = Router::new()
         // `GET /` goes to `root`
         .route("/", get(root))
         // `POST /users` goes to `create_user`
         .route("/users", post(create_user))
+        .nest("/kobo/:key/v1", create_kobo_router())
         .layer(middleware::from_fn(logging::log_request_response));
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     let listener = tokio::net::TcpListener::bind(addr.to_string())
         .await
         .unwrap();
